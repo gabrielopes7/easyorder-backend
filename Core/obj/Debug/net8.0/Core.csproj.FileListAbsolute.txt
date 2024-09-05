@@ -1,0 +1,15 @@
+D:\Projetos\Core\obj\Debug\net8.0\Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projetos\Core\obj\Debug\net8.0\Core.AssemblyInfoInputs.cache
+D:\Projetos\Core\obj\Debug\net8.0\Core.AssemblyInfo.cs
+D:\Projetos\Core\obj\Debug\net8.0\Core.csproj.CoreCompileInputs.cache
+D:\Projetos\Core\bin\Debug\net8.0\Core.deps.json
+D:\Projetos\Core\bin\Debug\net8.0\Core.dll
+D:\Projetos\Core\bin\Debug\net8.0\Core.pdb
+D:\Projetos\Core\bin\Debug\net8.0\Persistencia.dll
+D:\Projetos\Core\bin\Debug\net8.0\Persistencia.pdb
+D:\Projetos\Core\obj\Debug\net8.0\Core.csproj.AssemblyReference.cache
+D:\Projetos\Core\obj\Debug\net8.0\Core.csproj.Up2Date
+D:\Projetos\Core\obj\Debug\net8.0\Core.dll
+D:\Projetos\Core\obj\Debug\net8.0\refint\Core.dll
+D:\Projetos\Core\obj\Debug\net8.0\Core.pdb
+D:\Projetos\Core\obj\Debug\net8.0\ref\Core.dll

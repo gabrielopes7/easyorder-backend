@@ -1,0 +1,12 @@
+D:\Projetos\Persistencia\obj\Debug\net8.0\Persistencia.csproj.AssemblyReference.cache
+D:\Projetos\Persistencia\obj\Debug\net8.0\Persistencia.GeneratedMSBuildEditorConfig.editorconfig
+D:\Projetos\Persistencia\obj\Debug\net8.0\Persistencia.AssemblyInfoInputs.cache
+D:\Projetos\Persistencia\obj\Debug\net8.0\Persistencia.AssemblyInfo.cs
+D:\Projetos\Persistencia\obj\Debug\net8.0\Persistencia.csproj.CoreCompileInputs.cache
+D:\Projetos\Persistencia\bin\Debug\net8.0\Persistencia.deps.json
+D:\Projetos\Persistencia\bin\Debug\net8.0\Persistencia.dll
+D:\Projetos\Persistencia\bin\Debug\net8.0\Persistencia.pdb
+D:\Projetos\Persistencia\obj\Debug\net8.0\Persistencia.dll
+D:\Projetos\Persistencia\obj\Debug\net8.0\refint\Persistencia.dll
+D:\Projetos\Persistencia\obj\Debug\net8.0\Persistencia.pdb
+D:\Projetos\Persistencia\obj\Debug\net8.0\ref\Persistencia.dll

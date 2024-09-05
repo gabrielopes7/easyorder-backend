@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\EasyOrderAPI",
+    "\\EasyOrderAPI\\Controllers",
+    "\\EasyOrderAPI\\Controllers\\Usuario",
+    "\\Service"
+  ],
+  "SelectedNode": "\\EasyOrderAPI\\Controllers\\Usuario\\UsuarioController.cs",
+  "PreviewInSolutionExplorer": false
+}
