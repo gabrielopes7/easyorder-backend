@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Persistencia.Models;
-using EasyOrderAPI.ViewModel;
 using Microsoft.AspNetCore.Cors;
 using Persistencia.Service;
 using System.Security.Cryptography;
+using Persistencia.Interfaces;
+using Persistencia.Dto;
 
 namespace EasyOrderAPI.Controllers.Usuario
 {
@@ -23,14 +23,20 @@ namespace EasyOrderAPI.Controllers.Usuario
         // TODO: Será necessário fazer uma verificação se o usuário é existente quando for fazer um novo registro, caso for, será retornado um ERRO.
         [HttpPost]
         [Route("api/registrarUsuario")]
-        public IActionResult RegistrarUsuario(UsuarioViewModel usuarioView)
+        public IActionResult RegistrarUsuario([FromBody] UsuarioDTO usuarioDto)
         {
             // TODO: Será aplicado aqui o conceito de Service;
 
-            string passwordEncrypted = _passwordHash.CriptografarSenha(usuarioView.SenhaHash);
-            var usuario = new Persistencia.Models.Usuario(usuarioView.Nome, usuarioView.Email, usuarioView.DataNascimento, passwordEncrypted);
+            string passwordEncrypted = _passwordHash.CriptografarSenha(usuarioDto.SenhaHash);
+            UsuarioDTO usuarioCriptografado = new UsuarioDTO
+            {
+                Nome = usuarioDto.Nome,
+                Email = usuarioDto.Email,
+                DataNascimento = usuarioDto.DataNascimento,
+                SenhaHash = passwordEncrypted
+            };
 
-            bool usuarioAdicionado = _usuarioRepository.Add(usuario);
+            bool usuarioAdicionado = _usuarioRepository.Add(usuarioCriptografado);
 
             if (!usuarioAdicionado)
                 return BadRequest("Já existe um usuário com esse email cadastrado.");
@@ -38,17 +44,26 @@ namespace EasyOrderAPI.Controllers.Usuario
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("api/LoginUsuario")]
-        public IActionResult Login(string email, string senhaString)
+        public IActionResult Login([FromBody] UsuarioDTO usuarioDto)
         {
             // TODO: Será aplicado aqui o conceito de Service;
-            string passwordEncrypted = _passwordHash.CriptografarSenha(senhaString);
+            string passwordEncrypted = _passwordHash.CriptografarSenha(usuarioDto.SenhaHash);
 
-
+            UsuarioDTO usuarioDescriptografado = new UsuarioDTO
+            {
+                Email = usuarioDto.Email,
+                SenhaHash = passwordEncrypted
+            };
             // TODO: Colocar uma maneira de criar um Object Generic para passar os dados;
 
-            bool usuarioLogado = _usuarioRepository.Logar(email, senhaString);
+            bool usuarioLogado = _usuarioRepository.Logar(usuarioDescriptografado);
+
+            if (!usuarioLogado)
+            {
+                return BadRequest("Email e/ou senha estão incorretos.");
+            }
             // TODO: Entender a lógica que será utilizada aqui para fazer o Login, será necessário utilizar o repository?
             // Talvez não seja necessário, pois o Repository é utilizado apenas para fazer um CRUD no banco de dados;
 
