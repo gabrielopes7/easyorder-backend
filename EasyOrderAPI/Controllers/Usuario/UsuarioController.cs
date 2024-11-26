@@ -4,6 +4,10 @@ using Persistencia.Service;
 using System.Security.Cryptography;
 using Persistencia.Interfaces;
 using Persistencia.Dto;
+using Core;
+using EasyOrderAPI.Service.Usuario;
+using EasyOrderAPI.Service;
+using AutoMapper;
 
 namespace EasyOrderAPI.Controllers.Usuario
 {
@@ -12,62 +16,97 @@ namespace EasyOrderAPI.Controllers.Usuario
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioRepository _usuarioRepository;
+        private readonly IMapper _mapper;
         private readonly PasswordHash _passwordHash = new PasswordHash(SHA512.Create());
+        private readonly UsuarioService _usuarioService;
+        private readonly Token _token;
 
-        public UsuarioController(IUsuarioRepository usuarioRepository)
+        public UsuarioController(IUsuarioRepository usuarioRepository, IMapper mapper)
         {
             _usuarioRepository = usuarioRepository ?? throw new ArgumentNullException();
+            _usuarioService = new UsuarioService(_usuarioRepository);
+            _token = new Token();
         }
 
 
         // TODO: Será necessário fazer uma verificação se o usuário é existente quando for fazer um novo registro, caso for, será retornado um ERRO.
         [HttpPost]
-        [Route("api/registrarUsuario")]
+        [Route("api/RegistrarUsuario")]
         public IActionResult RegistrarUsuario([FromBody] UsuarioDTO usuarioDto)
         {
             // TODO: Será aplicado aqui o conceito de Service;
+            Validation validarRegistroUsuario = new Validation();
+            string errorMensagem = string.Empty;
+            validarRegistroUsuario = _usuarioService.ValidarRegistrarUsuario(validarRegistroUsuario, usuarioDto);
 
-            string passwordEncrypted = _passwordHash.CriptografarSenha(usuarioDto.SenhaHash);
-            UsuarioDTO usuarioCriptografado = new UsuarioDTO
+            if (validarRegistroUsuario.Validated)
             {
-                Nome = usuarioDto.Nome,
-                Email = usuarioDto.Email,
-                DataNascimento = usuarioDto.DataNascimento,
-                SenhaHash = passwordEncrypted
-            };
+                string passwordEncrypted = _passwordHash.CriptografarSenha(usuarioDto.Senha);
 
-            bool usuarioAdicionado = _usuarioRepository.Add(usuarioCriptografado);
+                UsuarioDTO usuarioCriptografado = new UsuarioDTO
+                {
+                    Nome = usuarioDto.Nome,
+                    Email = usuarioDto.Email,
+                    DataNascimento = usuarioDto.DataNascimento,
+                    Senha = passwordEncrypted
+                };
 
-            if (!usuarioAdicionado)
-                return BadRequest("Já existe um usuário com esse email cadastrado.");
+                _usuarioRepository.Add(usuarioCriptografado);
 
-            return Ok();
+                return Created();
+            }
+
+            foreach (ValidationMessage inconsistences in validarRegistroUsuario.Inconsistences)
+            {
+                errorMensagem += inconsistences.ToString() + "\n";
+            }
+            
+            return BadRequest(errorMensagem);
         }
 
         [HttpPost]
         [Route("api/LoginUsuario")]
         public IActionResult Login([FromBody] UsuarioDTO usuarioDto)
         {
-            // TODO: Será aplicado aqui o conceito de Service;
-            string passwordEncrypted = _passwordHash.CriptografarSenha(usuarioDto.SenhaHash);
+            Validation validarLoginUsuario = new Validation();
+            string errorMensagem = string.Empty;
+            validarLoginUsuario = _usuarioService.ValidarLoginUsuario(validarLoginUsuario, usuarioDto);
 
-            UsuarioDTO usuarioDescriptografado = new UsuarioDTO
+            if (validarLoginUsuario.Validated)
             {
-                Email = usuarioDto.Email,
-                SenhaHash = passwordEncrypted
-            };
-            // TODO: Colocar uma maneira de criar um Object Generic para passar os dados;
+                string passwordEncrypted = _passwordHash.CriptografarSenha(usuarioDto.Senha);
 
-            bool usuarioLogado = _usuarioRepository.Logar(usuarioDescriptografado);
+                UsuarioDTO usuarioCriptografado = new()
+                {
+                    Email = usuarioDto.Email,
+                    Senha = passwordEncrypted
+                };
 
-            if (!usuarioLogado)
-            {
-                return BadRequest("Email e/ou senha estão incorretos.");
+                Validation validarParaGeracaoToken = new Validation();
+                validarParaGeracaoToken = _usuarioService.ValidarParaGeracaoToken(validarParaGeracaoToken, usuarioCriptografado);
+
+                if (validarParaGeracaoToken.Validated)
+                {
+                    Persistencia.Models.Usuario usuario = _usuarioRepository.GetUsuario(usuarioDto);
+                    string token = _token.GerarToken(usuario);
+
+                    return Ok(token);
+                }
+
+                foreach (ValidationMessage inconsistences in validarParaGeracaoToken.Inconsistences)
+                {
+                    errorMensagem += inconsistences.ToString() + "\n";
+                }
+
+                return NotFound("Usuário não foi encontrado. Erro: " + errorMensagem);
             }
-            // TODO: Entender a lógica que será utilizada aqui para fazer o Login, será necessário utilizar o repository?
-            // Talvez não seja necessário, pois o Repository é utilizado apenas para fazer um CRUD no banco de dados;
 
-            return Ok();
+            foreach (ValidationMessage inconsistences in validarLoginUsuario.Inconsistences)
+            {
+                errorMensagem += inconsistences.ToString() + "\n";
+            }
+
+            return BadRequest("Verifique os dados. Erro: " + errorMensagem);
         }
 
         [HttpGet]

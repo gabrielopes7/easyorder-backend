@@ -10,7 +10,7 @@ namespace EasyOrderAPI.Service
     {
         public static string TokenSecret = "b4CGYTkIMRBl3FoY2oChde5GfCfgrlA4prWdlTAvAKQ";
 
-        public string GerarToken(Usuario usuario)
+        public string GerarToken(Persistencia.Models.Usuario usuario)
         {
             var salt = Encoding.ASCII.GetBytes(TokenSecret);
             var tokenConfig = new SecurityTokenDescriptor
@@ -21,7 +21,7 @@ namespace EasyOrderAPI.Service
                     new Claim("nomeUsuario", usuario.Nome)
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(salt), SecurityAlgorithms.Sha256)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(salt), SecurityAlgorithms.HmacSha256)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

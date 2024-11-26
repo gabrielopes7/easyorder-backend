@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Persistencia.Repository;
 using Microsoft.OpenApi.Models;
 using Persistencia.Interfaces;
+using EasyOrderAPI.Service.Usuario;
 
 var builder = WebApplication.CreateBuilder(args);
 
