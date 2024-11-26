@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Persistencia - Backup")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ca4ca2cadbaa217f30af6b9fb328e4b1b4c543bc")]
 [assembly: System.Reflection.AssemblyProductAttribute("Persistencia - Backup")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Persistencia - Backup")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

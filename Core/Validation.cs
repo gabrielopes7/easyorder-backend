@@ -5,39 +5,32 @@ namespace Core
 {
     public class Validation
     {
-        public Validation(){}
 
-        public List<ValidationMessage> inconsistences = new List<ValidationMessage>();
-        public List<ValidationMessage> Inconsistences
+        private List<ValidationMessage> inconsistences;
+        public Validation()
+        {
+            inconsistences = new List<ValidationMessage>();
+        }
+        public IReadOnlyList<ValidationMessage> Inconsistences
         {
             get
             {
                 this.inconsistences ??= new List<ValidationMessage>();
-                return this.Inconsistences;
+                return inconsistences.AsReadOnly();
             }
         }
 
-        public bool Validated
-        {
-            get
-            {
-                bool invalidated = this.HasInconsistence;
-                return !invalidated;
-            }
-        }
+        public bool Validated => !HasInconsistence;
 
-        public bool HasInconsistence
-        {
-            get
-            {
-                return this.inconsistences.Count > 0;
-            }
-        }
+        public bool HasInconsistence => inconsistences.Count > 0;
 
 
         public virtual void AddInconsistence(ValidationMessage message)
         {
-            this.Inconsistences.Add(message);
+            if(message != null)
+            {
+                inconsistences.Add(message);
+            }
         }
     }
 }

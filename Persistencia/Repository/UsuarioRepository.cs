@@ -1,42 +1,39 @@
-﻿using Persistencia.Models;
-using Persistencia.Service;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Persistencia.Interfaces;
+using Persistencia.Models;
+using Persistencia.Dto;
+using AutoMapper;
 
 namespace Persistencia.Repository
 {
     public class UsuarioRepository : IUsuarioRepository
     {
         private readonly ConnectionContext _context = new ConnectionContext();
-        public Boolean Add(Usuario usuario)
+        private readonly IMapper _mapper;
+        public UsuarioRepository(IMapper mapper)
         {
-
-            //TODO: Será retirado daqui todas as validações, ele ficará única e exclusivamente com o CRUD;
-            Usuario? usuarioRegistrado = _context.Usuario.Where(usuario => usuario.Email == usuario.Email).FirstOrDefault();
-
-            if(usuarioRegistrado != null)
-            {
-                _context.Usuario.Add(usuario);
-                _context.SaveChanges();
-                return true;
-            }
-
-            return false;
+            _mapper = mapper;
+        }
+        public void Add(UsuarioDTO usuarioDto)
+        {
+            Persistencia.Models.Usuario usuario = _mapper.Map<Usuario>(usuarioDto);
+            _context.Usuario.Add(usuario);
+            _context.SaveChanges();
         }
 
-        public Boolean Logar(string email, string senhaHash)
+        public Usuario GetUsuario(UsuarioDTO usuarioDTO) 
         {
-            Usuario? usuarioRegistrado = _context.Usuario.Where(usuarioRegistrado => usuarioRegistrado.Email == email &&
-                                                                           usuarioRegistrado.SenhaHash == senhaHash).FirstOrDefault();
+            return _context.Usuario.Where(usuario => usuario.Email == usuarioDTO.Email).First();
+        }
 
-            if( usuarioRegistrado != null )
-                return true;
+        public Boolean VerificarExistenciaUsuario(UsuarioDTO usuarioDto)
+        {
+            return _context.Usuario.Any(usuario => usuario.Email == usuarioDto.Email);
+        }
 
-            return false;
+        public Boolean VerificarLoginUsuario(UsuarioDTO usuarioDto)
+        {
+            return _context.Usuario.Any(usuario => usuario.Email == usuarioDto.Email &&
+                                                   usuario.Senha == usuarioDto.Senha);
         }
 
         public List<Usuario> Get()

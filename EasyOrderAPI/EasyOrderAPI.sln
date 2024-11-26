@@ -10,8 +10,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EasyOrderAPI", "EasyOrderAP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistencia", "..\Persistencia\Persistencia.csproj", "{34217C43-43F1-4F4C-AA19-A2B1A447A055}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E19C8BC1-6E75-4C67-9AB4-10AE26B6135E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "..\Core\Core.csproj", "{0DD4CF22-213F-4F5D-A7BB-26197B15AB6C}"
 	ProjectSection(ProjectDependencies) = postProject
 		{34217C43-43F1-4F4C-AA19-A2B1A447A055} = {34217C43-43F1-4F4C-AA19-A2B1A447A055}
