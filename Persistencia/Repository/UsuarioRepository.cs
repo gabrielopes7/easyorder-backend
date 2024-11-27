@@ -25,6 +25,17 @@ namespace Persistencia.Repository
             return _context.Usuario.Where(usuario => usuario.Email == usuarioDTO.Email).First();
         }
 
+        public UsuarioDTO GetUsuario(int id) {
+            Usuario? usuario = _context.Usuario.Where(usuario => usuario.Id == id).FirstOrDefault();
+            UsuarioDTO usuarioDTO = null;
+            
+            if (usuario is not null)
+                usuarioDTO = _mapper.Map<UsuarioDTO>(usuario);
+            
+            return usuarioDTO;
+        }
+
+
         public Boolean VerificarExistenciaUsuario(UsuarioDTO usuarioDto)
         {
             return _context.Usuario.Any(usuario => usuario.Email == usuarioDto.Email);

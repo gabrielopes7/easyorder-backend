@@ -8,6 +8,7 @@ using Core;
 using EasyOrderAPI.Service.Usuario;
 using EasyOrderAPI.Service;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EasyOrderAPI.Controllers.Usuario
 {
@@ -90,7 +91,13 @@ namespace EasyOrderAPI.Controllers.Usuario
                     Persistencia.Models.Usuario usuario = _usuarioRepository.GetUsuario(usuarioDto);
                     string token = _token.GerarToken(usuario);
 
-                    return Ok(token);
+                    Object tokenUser = new
+                    {
+                        idUsuario = usuario.Id,
+                        token
+                    };
+
+                    return Ok(tokenUser);
                 }
 
                 foreach (ValidationMessage inconsistences in validarParaGeracaoToken.Inconsistences)
@@ -107,6 +114,18 @@ namespace EasyOrderAPI.Controllers.Usuario
             }
 
             return BadRequest("Verifique os dados. Erro: " + errorMensagem);
+        }
+
+        [HttpGet]
+        [Route("api/BuscarUsuario")]
+        public IActionResult BuscarUsuario(int id)
+        {
+            UsuarioDTO usuarioDTO = _usuarioRepository.GetUsuario(id);
+
+            if (usuarioDTO is null)
+                return NotFound("O usuário não foi encontado.");
+
+            return Ok(usuarioDTO);
         }
 
         [HttpGet]
